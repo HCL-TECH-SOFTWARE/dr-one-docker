@@ -1,0 +1,8 @@
+{
+  "realm" : "drone",
+  "auth-server-url" : "https://auth:8443/auth",
+  "ssl-required" : "external",
+  "resource" : "drone_client",
+  "public-client" : true,
+  "confidential-port" : 0
+}
