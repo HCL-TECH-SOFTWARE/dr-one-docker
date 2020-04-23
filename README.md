@@ -23,7 +23,9 @@ Also currently DR ONE uses Keycloak's cli-admin client to perform access control
 for designs, which is potential risk.
 
 And finally for now the Keycloak service should be accessible via `auth`
-name.
+name, e.g. by adding it to the `hosts` file:
+
+    127.0.0.1    auth
 
 Before DR ONE can be started, Keycloak service should be started and configured
 first:
