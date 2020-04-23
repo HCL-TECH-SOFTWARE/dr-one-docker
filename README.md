@@ -35,8 +35,18 @@ execute the configuration script in its container:
 
     docker-compose exec auth config-kc-for-dr-one
 
+For Windows host the `config-kc-for-dr-one` will not have executable attribute,
+so it should be run using `sh`:
+
+    docker-compose exec auth sh /usr/local/bin/config-kc-for-dr-one
+
 When it is finished, bring up the DR ONE container specifying authentication
-mode for it:
+mode for it. With `bash` you can do the following:
 
     DR_AUTH=keycloak docker-compose up dr-one
 
+In Windows command prompt you have to set the environment variable with a
+separate command:
+
+    set DR_AUTH=keycloak
+    docker-compose up dr-one
