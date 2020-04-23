@@ -3,16 +3,14 @@ services:
   db:
     image: mongo
   auth:
-    image: jboss/keycloak
+    build:
+      context: ./auth
     ports: [ '8443:8443' ]
     environment:
       KEYCLOAK_ADMIN_CLI_SECRET: ${KEYCLOAK_ADMIN_CLI_SECRET:-b37deffe-83c5-11ea-b39f-37118301889d}
       KEYCLOAK_USER: ${KEYCLOAK_USER:-admin}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD:-admin}
       KEYCLOAK_HOSTNAME: 'auth'
-    volumes:
-      - ./config-kc-for-dr-one:/usr/local/bin/config-kc-for-dr-one
-      - ./drone-realm-export.json:/tmp/drone-realm-export.json
   dr-one:
     image: designroom/dr-one:${DR_VERSION:-latest}
     ports: [ '10101:10101', '10102:10102' ]
