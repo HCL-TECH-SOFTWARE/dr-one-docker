@@ -14,7 +14,7 @@ services:
   dr-one:
     image: designroom/dr-one:${DR_VERSION:-latest}
     ports: [ '10101:10101', '10102:10102' ]
-    command: [node, app.js, --dr_dbhost=db]
+    command: [node, app.js, --dr_db_url=mongodb://db:27017/dr]
     environment:
       DR_HOST: ${DR_HOST:-localhost}
       DR_AUTH: ${DR_AUTH:-none}
