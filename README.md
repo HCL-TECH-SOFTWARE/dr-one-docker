@@ -14,36 +14,33 @@ Just start `dr-one` service with `docker-compose`:
 
     docker-compose up dr-one
 
+After all containers are ready DR ONE should be available at
+https://localhost:10101/dr/web.
+
 ## Run DR ONE with Keycloak authentication
 
-Please note that this configuration uses predefined names, passwords and
-secrets.
+Note that this configuration uses predefined administrative user.
 
-Also currently DR ONE uses Keycloak's cli-admin client to perform access control
-for designs, which is potential risk.
+To enable Keycloak driven authentication in DR ONE, the `DR_AUTH` variable
+should be set to the string `keycloak`.
 
-And finally for now the Keycloak service should be accessible via `auth`
-name, e.g. by adding it to the `hosts` file:
+In bash/sh you can run the following command:
 
-    127.0.0.1    auth
+```
+DR_AUTH=keycloak docker-compose up
+```
 
-Before DR ONE can be started, Keycloak service should be started and configured
-first:
+In `cmd` you need to have a separate command to set environment:
 
-    docker-compose up auth
+```
+set DR_AUTH=keycloak
+docker-compose up
+```
 
-As soon as Keycloak is up and running (look for `Keycloak started` in the log)
-execute the configuration script in its container:
+Keycloak service will be configured with administrative user `admin` having
+password `admin`. Keycloak administrative console can be accessed at
+`https://auth.localhost.localdomain:8443/admin`. When it is up and running at
+least one user should be created in the `Drone` realm so it would be possible to
+use it to access DR ONE.
 
-    docker-compose exec auth config-kc-for-dr-one
-
-When it is finished, bring up the DR ONE container specifying authentication
-mode for it. With `bash` you can do the following:
-
-    DR_AUTH=keycloak docker-compose up dr-one
-
-In Windows command prompt you have to set the environment variable with a
-separate command:
-
-    set DR_AUTH=keycloak
-    docker-compose up dr-one
+DR ONE should be accessible at `https://dr-one.localhost.localdomain:10101/dr/web`.

@@ -1,24 +1,33 @@
 version: '3'
 services:
   db:
-    image: mongo
+    image: ${MONGO_IMAGE:-mongo:latest}
   auth:
-    build:
-      context: ./auth
-    ports: [ '8443:8443' ]
+    image: ${KEYCLOAK_IMAGE:-jboss/keycloak:latest}
+    ports: [ '8443:8443', '8080:8080' ]
     environment:
-      KEYCLOAK_ADMIN_CLI_SECRET: ${KEYCLOAK_ADMIN_CLI_SECRET:-b37deffe-83c5-11ea-b39f-37118301889d}
       KEYCLOAK_USER: ${KEYCLOAK_USER:-admin}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD:-admin}
-      KEYCLOAK_HOSTNAME: 'auth'
-  dr-one:
-    image: designroom/dr-one:${DR_VERSION:-latest}
-    ports: [ '10101:10101', '10102:10102' ]
-    command: [node, app.js, --dr_db_url=mongodb://db:27017/dr]
-    environment:
-      DR_HOST: ${DR_HOST:-localhost}
-      DR_AUTH: ${DR_AUTH:-none}
-      KC_ADMIN_SECRET: ${KEYCLOAK_ADMIN_CLI_SECRET:-b37deffe-83c5-11ea-b39f-37118301889d}
+      KEYCLOAK_IMPORT: /tmp/drone-realm-export.json
     volumes:
-      - ./keycloak.json:/dr-one/OnPrem_Design_Room/config/keycloak.json
+      - ./auth/drone-realm-export.json:/tmp/drone-realm-export.json
+    networks:
+      default:
+        aliases:
+          - auth${DOMAIN:-.localhost.localdomain}
+  dr-one:
+    image: ${DR_ONE_IMAGE:-designroom/dr-one:latest}
+    ports: [ '10101:10101', '10102:10102' ]
+    command: [ node, app.js, "--dr_keycloak_config:auth-server-url=https://auth${DOMAIN:-.localhost.localdomain}:8443/auth" ]
+    environment:
+      DR_HOST: dr-one${DOMAIN:-.localhost.localdomain}
+      DR_DB_URL: mongodb://db:27017/dr
+      DR_AUTH: ${DR_AUTH:-none}
     depends_on: [ 'db' ]
+    restart: on-failure
+    networks:
+      default:
+        aliases:
+          - dr-one${DOMAIN:-.localhost.localdomain}
+networks:
+  default:
