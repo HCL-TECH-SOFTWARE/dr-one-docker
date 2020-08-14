@@ -34,7 +34,10 @@ In bash/sh you can run the following command:
 DR_AUTH=keycloak docker-compose up
 ```
 
-In `cmd` you need to have a separate command to set environment:
+On Windows you would also need to allow file sharing. 
+- Right-click on the Docker Desktop icon in the taskbar -> Settings -> Resources -> File Sharing
+- Add a folder where you checked out files from this repository to the list.
+Then run the following commands in `cmd`
 
 ```
 set DR_AUTH=keycloak
@@ -43,8 +46,5 @@ docker-compose up
 
 Keycloak service will be configured with administrative user `admin` having
 password `admin`. Keycloak administrative console can be accessed at
-`https://auth.localhost.localdomain:8443/admin`. When it is up and running at
-least one user should be created in the `Drone` realm so it would be possible to
-use it to access DR ONE.
-
+`https://auth.localhost.localdomain:8443/admin`. When it is up and running you would need to create users in `Drone` realm and assign them roles to manage design access. See chapter Creating Users in [Authentication Setup](https://www.devops-community.com/uploads/1/0/2/7/102707030/authentication_setup.2020.26.pdf) document.
 DR ONE should be accessible at `https://dr-one.localhost.localdomain:10101/dr/web`.
