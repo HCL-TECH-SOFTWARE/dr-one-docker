@@ -21,6 +21,10 @@ https://localhost:10101/dr/web.
 
 Note that this configuration uses predefined administrative user.
 
+This configuration assumes that the localhost is available as
+`auth.localhost.localdomain` and `dr-one.localhost.localdomain`. If it is not,
+you can add these entries to your `hosts` file.
+
 To enable Keycloak driven authentication in DR ONE, the `DR_AUTH` variable
 should be set to the string `keycloak`.
 
